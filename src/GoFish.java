@@ -10,12 +10,34 @@ public class GoFish {
     private final Player computer;
     private List<Card> deck;
     private final Scanner in;
+    private boolean OtherHand;
+    private String PlayerIdenity;
 
     public GoFish() {
         this.whoseTurn = 'P';
         this.player = new Player();
+        boolean reask = true;
+
         this.computer = new Player();
         this.in = new Scanner(System.in);
+
+        while(reask){
+            System.out.println("\none player or two players?(respond with \"one\" or \"two\"");
+            String response = in.nextLine();
+            if(response != null){
+                response = response.toLowerCase();
+                if(response.equals("one")){
+                    reask = false;
+                    OtherHand = true;
+                    PlayerIdenity = "CPU";
+                } else if(response.equals("two")){
+                    reask = false;
+                    OtherHand = false;
+                    PlayerIdenity = "Player Two";
+                }
+            }
+        }
+
     }
 
     public void play() {
@@ -35,7 +57,7 @@ public class GoFish {
                 whoseTurn = takeTurn(true);
 
                 if (computer.findAndRemoveBooks()) {
-                    System.out.println("CPU: Oh, that's a book!");
+                    System.out.println(PlayerIdenity + ": Oh, that's a book!");
                     showBooks(true);
                 }
             }
@@ -115,24 +137,24 @@ public class GoFish {
 
         if (!cpu) {
             if (computer.hasCard(card)) {
-                System.out.println("CPU: Yup, here you go!");
+                System.out.println(PlayerIdenity + ": Yup, here you go!");
                 computer.relinquishCard(player, card);
 
                 return 'P';
             } else {
-                System.out.println("CPU: Nope, go fish!");
+                System.out.println(PlayerIdenity + ": Nope, go fish!");
                 player.takeCard(deck.remove(0));
 
                 return 'C';
             }
         } else {
             if (player.hasCard(card)) {
-                System.out.println("CPU: Oh, you do? Well, hand it over!");
+                System.out.println(PlayerIdenity + ": Oh, you do? Well, hand it over!");
                 player.relinquishCard(computer, card);
 
                 return 'C';
             } else {
-                System.out.println("CPU: Ah, I guess I'll go fish...");
+                System.out.println(PlayerIdenity + ": Ah, I guess I'll go fish...");
                 computer.takeCard(deck.remove(0));
 
 
@@ -166,7 +188,7 @@ public class GoFish {
                     return null;
                 } else {
                     card = computer.getCardByNeed();
-                    System.out.println("CPU: Got any... " + card.getRank());
+                    System.out.println(PlayerIdenity + ": Got any... " + card.getRank());
                 }
             }
         }
